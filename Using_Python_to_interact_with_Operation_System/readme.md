@@ -1,12 +1,13 @@
-Final Project
-syslog.log
+# Final Project
+## Convert two csv file form log file
+### syslog.log
 List all alert in the system
 
-Two_csv.py
+### Two_csv.py
 It will read the logs and generate two csv files based on the user counter and error counter on each line of the log file.
 
-User_statistics.csv
+### User_statistics.csv
 This CSV file contains how many times each user appears on the info and error messages from the logs.
 
-Error_Message.csv
+### Error_Message.csv
 This CSV file contains the types of errors on the logs file and the number of each occurrence.

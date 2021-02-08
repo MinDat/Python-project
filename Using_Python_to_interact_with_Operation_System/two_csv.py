@@ -3,6 +3,7 @@
 import re
 import csv
 import sys
+import os
 
 # Dictionary store the data
 alert_count_per_user={}
@@ -10,30 +11,26 @@ messages_count={}
 
 def create_data_dict():
     # Adding error when open files
-    try:
-        with open(sys.argv[1],'r') as log_file:
-            for line in log_file:
-                # search name of user
-                pattern = r": +([A-Z]*) +(.*) \((.*)\)"
-                result = re.search( pattern, line)
-                # If the user have not exist in the list. setdefault for that user
-                """------------------------------setdefault for a dict if that keys not in dict-----------------------------------"""
-                if result[3] not in alert_count_per_user.keys():
-                    # Set the default of counting alert dict
-                    alert_count_per_user.setdefault(result[3], {"INFO":0,"ERROR":0})
-                """---------------------------------------------------------------------------------------------------------------"""
-                # Counting Infor and Error
-                if "INFO" in line:
-                    alert_count_per_user[result[3]]["INFO"] += 1
-                elif "ERROR" in line:
-                    alert_count_per_user[result[3]]["ERROR"] += 1
+    with open(sys.argv[1],'r') as log_file:
+        for line in log_file:
+            # search name of user
+            pattern = r": +([A-Z]*) +(.*) \((.*)\)"
+            result = re.search( pattern, line)
+            # If the user have not exist in the list. setdefault for that user
+            """------------------------------setdefault for a dict if that keys not in dict-----------------------------------"""
+            if result[3] not in alert_count_per_user.keys():
+                # Set the default of counting alert dict
+                alert_count_per_user.setdefault(result[3], {"INFO":0,"ERROR":0})
+            """---------------------------------------------------------------------------------------------------------------"""
+            # Counting Infor and Error
+            if "INFO" in line:
+                alert_count_per_user[result[3]]["INFO"] += 1
+            elif "ERROR" in line:
+                alert_count_per_user[result[3]]["ERROR"] += 1
 
-                    # Count messages
-                    messages_count[result[2]] = messages_count.get(result[2], 0) + 1
+                # Count messages
+                messages_count[result[2]] = messages_count.get(result[2], 0) + 1
 
-    except:
-        print("Error the files directory is invaild !!!")
-        exit(1)
 
 
 def user_statistics():
@@ -89,6 +86,19 @@ def main():
     if len(sys.argv) != 2:
         print("Please input the file the log file directory !!!")
         exit(1)
+    """-----------------------------------------------------------------------------------------------------"""
+    # Check csv extension of the file
+    if ".csv" not in sys.argv[1]:
+        print('Missing ".csv" file extension from first command-line argument!')
+        print("Exiting program...")
+        sys.exit(1)
+    # check that csv file exists
+    if not os.path.exists(sys.argv[1]):
+        print("{} does not exist".format(sys.argv[1]))
+        print("Exiting program...")
+        exit(1)
+    """-----------------------------------------------------------------------------------------------------"""
+
 
     create_data_dict()
     user_statistics()

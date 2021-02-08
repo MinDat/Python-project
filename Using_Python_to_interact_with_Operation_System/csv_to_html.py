@@ -2,9 +2,61 @@
 
 import sys
 import os
+import csv
 
-def fname():
-    pass
+
+
+def read_csv_create_text_file(csv_file, title):
+    """ Read the content form CSV and generate html text file"""
+    html_text = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+    table {
+      width: 25%;
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #dddddd;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    </style>
+    </head>
+    <body>
+    """
+
+    html_table = "<table><tr>"
+
+    with open(csv_file, "r") as files:
+        f = csv.reader(files)
+        for index, row in enumerate(f):
+
+            table_block = ""
+
+            if index == 0:
+                for name in row:
+                    table_block += "<th>{}</th>".format(name)
+            else:
+                for element in row:
+                    table_block += "<td>{}</td>".format(element)
+
+            html_table += table_block + "</tr><tr>"
+
+        html_table += "</tr></table>"
+
+    html_text += (html_table + "</body></html>")
+    print(html_text)
+    with open("test.html", "w") as f:
+        f.write(html_text)
+
 
 def main():
     #adding command line arguments
@@ -29,7 +81,10 @@ def main():
     # take the file_name csv as an title
     title = os.path.splitext(os.path.basename(csv_file))[0].replace("_"," ").title()
 
-    print(title)
+
+
+    read_csv_create_text_file(csv_file, title)
     exit(0)
 
-main()
+if __name__ == "__main__":
+    main()

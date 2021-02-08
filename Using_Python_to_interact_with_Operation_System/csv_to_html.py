@@ -5,9 +5,15 @@ import os
 import csv
 
 
+def read_csv(csv_file):
+    """ Read data form CSV files """
+    with open(csv_file, "r") as files:
+        data = csv.reader(files)
+        return list(data)
 
-def read_csv_create_text_file(csv_file, title):
+def html_content(data, title):
     """ Read the content form CSV and generate html text file"""
+    # add html header into text
     html_text = """
     <!DOCTYPE html>
     <html>
@@ -30,32 +36,43 @@ def read_csv_create_text_file(csv_file, title):
     }
     </style>
     </head>
-    <body>
     """
 
-    html_table = "<table><tr>"
+    # Starting body of html
+    html_text += "<body>"
 
-    with open(csv_file, "r") as files:
-        f = csv.reader(files)
-        for index, row in enumerate(f):
+    # adding title
+    html_text += "<h2> {} </h2>".format(title)
 
-            table_block = ""
+    # Adding table content
+    html_text += "<table>"
+    # Each row in table
+    for index, row in enumerate(data):
+        #Each collumn in table
+        html_text += "<tr>"
+        if index == 0:
+            # Table Head
+            for name in row:
+                html_text += "<th>{}</th>".format(name)
+        else:
+            # Table body
+            for element in row:
+                html_text += "<td>{}</td>".format(element)
+        # Exit collumn
+        html_text += "</tr>"
+    # Exit row
+    html_text += "</table>"
+    # End of html
+    html_text += """</body>
+                    </html>"""
+    # Return
+    return html_text
 
-            if index == 0:
-                for name in row:
-                    table_block += "<th>{}</th>".format(name)
-            else:
-                for element in row:
-                    table_block += "<td>{}</td>".format(element)
 
-            html_table += table_block + "</tr><tr>"
-
-        html_table += "</tr></table>"
-
-    html_text += (html_table + "</body></html>")
-    print(html_text)
-    with open("test.html", "w") as f:
-        f.write(html_text)
+def create_html(content, html_dir):
+    """create html files"""
+    with open(html_dir, "w") as f:
+        f.write(content)
 
 
 def main():
@@ -81,9 +98,10 @@ def main():
     # take the file_name csv as an title
     title = os.path.splitext(os.path.basename(csv_file))[0].replace("_"," ").title()
 
-
-
-    read_csv_create_text_file(csv_file, title)
+    # call sub function
+    data = read_csv(csv_file)
+    content = html_content(data, title)
+    create_html(content, html_file)
     exit(0)
 
 if __name__ == "__main__":

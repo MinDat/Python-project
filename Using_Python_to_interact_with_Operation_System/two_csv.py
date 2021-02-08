@@ -88,7 +88,7 @@ def main():
         exit(1)
     """-----------------------------------------------------------------------------------------------------"""
     # Check csv extension of the file
-    if ".csv" not in sys.argv[1]:
+    if ".log" not in sys.argv[1]:
         print('Missing ".csv" file extension from first command-line argument!')
         print("Exiting program...")
         sys.exit(1)

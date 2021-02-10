@@ -1,26 +1,21 @@
 #!/usr/bin/env python3
 
-# Google IT Automation with Python Professional Certificate
-# Elmo Allistair
-# 11 Agu 2020
-
 from PIL import Image
-from glob import glob
 import os
 
-# Note: put this script in images folder
-# Iterate through each file in the folder
-for file in glob('images/ic_*'): # ignore hidden file (images/.DS_Store) from iteration
-    image = Image.open(file).convert('RGB')
-    # print(image.format, image.size, image.mode) # test
-    """
-    For each file:
-    1. Rotate the image 90° clockwise
-    2. Resize the image from 192x192 to 128x128
-    3. Save the image to a new folder in .jpeg format
-    """
-    path, filename = os.path.split(file)
-    filename = os.path.splitext(filename)[0] # get filename without extension
-    image.rotate(90).resize((128,128)).save('s/{}.jpeg'.format(filename))
+def main():
+    # List all files in images
+    list_dir = os.listdir("images")
+    for f in list_dir:
+        # looking for file that start with ic_
+        if f.startswith("ic_"):
+            # open file image in images dir as object
+            im = Image.open("images/{}".format(f))
+            # rotate
+            im.rotate(270)
+            #resize
+            im.resize((128,128))
+            # save in the diference dir name mod
+            im.save("mod/{}.ico".format(f))
 
-print('OK')
+main()

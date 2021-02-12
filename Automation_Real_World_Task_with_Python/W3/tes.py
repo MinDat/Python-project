@@ -5,20 +5,81 @@ from reportlab.platypus import Paragraph, Spacer, Table, Image
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 
+import os
+import glob
+import json
+import sys
+
+def data_table(filename):
+    data = [["ID","Car", "Price", "Total"]]
+    list_data = []
+
+    with open(filename, "r") as json_file:
+        text = json_file.read()
+        list_data = json.loads(text)
+
+    for each_car in list_data:
+        row = []
+        for key, value in each_car.items():
+            if type(value) is dict:
+                a, b, c = value.values()
+                car = "{} {} ({})".format(a, b, c)
+
+                row.append(car)
+            else:
+                row.append(value)
+
+        data.append(row)
+
+    return data
 
 
 
-report = SimpleDocTemplate("tes/report.pdf")
-styles = getSampleStyleSheet()
-report_title = Paragraph("A Complete Inventory of My Fruit", styles["h1"])
+def Generate_PDF(filename, title, table_data):
+    styles = getSampleStyleSheet()
+    report = SimpleDocTemplate("tes/report.pdf")
 
-table_style = [('GRID', (0,0), (-1,-1), 1, colors.black)]
-table_data = [['elderberries', 1], ['figs', 1], ['apples', 2], ['durians', 3], ['bananas', 5], ['cherries', 8], ['grapes', 13]]
-report_table = Table(data=table_data, style=table_style, hAlign="LEFT")
+    report_title = Paragraph(title, styles["h1"])
 
-report.build([report_title, report_table])
+    '''--------------------------------------------------------------------------------------------'''
 
 
+
+
+    '''--------------------------------------------------------------------------------------------'''
+
+    # table_data = [['elderberries', 1], ['figs', 1], ['apples', 2], ['durians', 3], ['bananas', 5], ['cherries', 8], ['grapes', 13]]
+
+
+    table_style = [('GRID', (0,0), (-1,-1), 1, colors.black),                   # Highlight grid of the table
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),                  # Bold the header
+                ('ALIGN', (0,0), (-1,-1), 'CENTER')]                            # Aligning all text to center
+
+    report_table = Table(data=table_data, style=table_style, hAlign="LEFT")
+
+    empty_line = Spacer(1,20)                                                   # Adding Space between 2 line
+    # Build PDF files
+    report.build([report_title, empty_line, report_table])
+
+def main():
+
+    for filename in os.listdir():
+        if filename.endswith(".json"):
+            break
+        print("Not found Json file ...")
+        exit(1)
+
+
+    title = "A Complete Inventory of My Fruit"
+
+    table_data = data_table(filename)
+    print(table_data[1])
+
+    Generate_PDF(filename, title, table_data)
+
+
+
+main()
 
 
 

@@ -102,47 +102,5 @@ def main():
     info = overal_sumary(json_format)
     Generate_PDF(filename, title, info, table_data)         # Create PDF
 
-
-main()
-
-
-'''--------------------------------------------------------------------------------------------'''
-
-
-
-'''--------------------------------------------------------------------------------------------'''
-
-
-
-# import smtplib, ssl
-# import getpass
-# from email.message import EmailMessage
-#
-#
-# message = EmailMessage()
-#
-# sender = "me@example.com"
-# recipient = "you@example.com"
-#
-# message['From'] = sender
-# message['To'] = recipient
-#
-# message['Subject'] = 'Greetings from {} to {}!'.format(sender, recipient)
-#
-# body = """Hey there!
-#
-#     I'm learning to send emails using Python!"""
-#
-# message.set_content(body)
-#
-# port = 465  # For SSL
-# password = getpass.getpass('Password? ')
-#
-# # Create a secure SSL context
-# context = ssl.create_default_context()
-#
-# with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-#     server.login("my@gmail.com", password)
-#     # TODO: Send email here
-#     mail_server.send_message(message)
-#     mail_server.quit()
+if __name__ == "__main__":
+    main()
